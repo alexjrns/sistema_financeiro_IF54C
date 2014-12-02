@@ -1,5 +1,8 @@
 package GUI;
 
+import java.awt.Toolkit;
+
+
 /**
  *
  * @author JoãoRicardo
@@ -11,6 +14,8 @@ public class Principal extends javax.swing.JFrame {
      */
     public Principal() {
         initComponents();
+        setIcon();
+
     }
 
     @SuppressWarnings("unchecked")
@@ -130,6 +135,10 @@ public class Principal extends javax.swing.JFrame {
             }
         });
     }
+    
+    private void setIcon() {
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("imagens/sisfi_icone.png")));
+    }      
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu ajuda;

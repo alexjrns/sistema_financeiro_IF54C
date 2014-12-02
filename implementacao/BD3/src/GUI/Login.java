@@ -7,6 +7,7 @@ package GUI;
 
 import DAO.UsuarioDAO;
 import Entidades.Usuario;
+import java.awt.Toolkit;
 import javax.swing.JOptionPane;
 
 /**
@@ -20,6 +21,7 @@ public class Login extends javax.swing.JFrame {
      */
     public Login() {
         initComponents();
+        setIcon();
     }
 
     /**
@@ -159,6 +161,10 @@ public class Login extends javax.swing.JFrame {
             }
         });
     }
+    
+    private void setIcon() {
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("imagens/sisfi_icone.png")));
+    }      
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogin;
