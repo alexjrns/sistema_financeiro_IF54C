@@ -26,7 +26,8 @@ $RECYCLE.BIN/
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
@@ -41,3 +42,8 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+/implementacao/Sisfi/nbproject/private/
+/implementacao/Sisfi/build/
+/implementacao/BD3/build/
+/implementacao/BD3/dist/
+/implementacao/BD3/nbproject/private/
