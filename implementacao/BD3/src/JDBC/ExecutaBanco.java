@@ -6,10 +6,14 @@
 package JDBC;
 
 import Entidades.Classificacao;
+import Entidades.Cliente;
 import Entidades.Conta;
 import Entidades.Endereco;
+import Entidades.Fornecedor;
 import Entidades.Lancamento;
+import Entidades.Pessoa;
 import Entidades.Usuario;
+import Entidades.Utilitario;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -197,6 +201,30 @@ public class ExecutaBanco {
         }
         return lista;        
     }
+    
+    public Usuario autenticar(Usuario usr){
+        String sql = "SELECT id_usuario, cod_usuario, des_nome, val_login, val_senha, opt_tesoureiro, opt_desativado FROM usuario WHERE ((val_login = ?) AND (val_senha = ?));";
+        try{
+            PreparedStatement preparador = con.prepareStatement(sql);
+            preparador.setString(1, usr.getLogin());
+            preparador.setString(2, Utilitario.md5(usr.getSenha()));
+            ResultSet resultado = preparador.executeQuery();
+            
+            if(resultado.next()){
+                int cod = resultado.getInt("cod_usuario");
+                String nome = resultado.getString("des_nome");
+                String lgn = resultado.getString("val_login");
+                String sen = resultado.getString("val_senha");
+                boolean tesoureiro = resultado.getString("opt_tesoureiro").equals("Sim");
+                boolean desativado = resultado.getString("opt_desativado").equals("Sim");
+
+                return new Usuario(cod, nome, lgn, sen, tesoureiro, desativado);
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro no comando SQL de Consulta: " + e.getMessage() + "\n" + "Comando com erro: " + sql);
+        }
+        return null;        
+    }    
 
     public Classificacao buscarClassificacao(int codigo){
         String sql = "SELECT id_classificacao, cod_classificacao, des_classificacao, des_tipooperacao FROM classificacao WHERE (cod_classificacao = ?);";
@@ -395,5 +423,125 @@ public class ExecutaBanco {
         }
         return lista;        
     }
+    
+    public Pessoa buscarPessoa(int codigo){
+        String sql = "SELECT id_pessoa, cod_pessoa, des_nome, val_documento, val_telefone, fk_endereco FROM pessoa WHERE (cod_pessoa = ?);";
+        Pessoa pes = new Pessoa();
+        try {
+            PreparedStatement preparador = con.prepareStatement(sql);
+            preparador.setInt(1, codigo);
+
+            ResultSet resultado = preparador.executeQuery();
+            resultado.next();
+
+            pes.setChave(resultado.getInt("id_pessoa"));
+            pes.setCodPessoa(resultado.getInt("cod_pessoa"));
+            pes.setNome(resultado.getString("des_numero"));
+            pes.setTelefone(resultado.getString("val_telefone"));
+            pes.setEndereco(this.buscarEndereco(resultado.getInt("fk_endereco")));
+
+            preparador.close();
+        } catch (SQLException e) {
+            System.out.println("Erro no comando SQL de Consulta: " + e.getMessage() + "\n" + "Comando com erro: " + sql);
+        }
+        return pes;
+    }
+    
+    public List<Pessoa> buscarTodosPessoa(){
+        String sql = "SELECT id_pessoa, cod_pessoa, des_nome, val_documento, val_telefone, fk_endereco FROM pessoa;";
+        List<Pessoa> lista = new ArrayList<>();
+        ResultSet resultado = executar(sql);
+        try {
+            while(resultado.next()){
+                Pessoa pes = new Pessoa();
+                pes.setChave(resultado.getInt("id_pessoa"));
+                pes.setCodPessoa(resultado.getInt("cod_pessoa"));
+                pes.setNome(resultado.getString("des_numero"));
+                pes.setTelefone(resultado.getString("val_telefone"));
+                pes.setEndereco(this.buscarEndereco(resultado.getInt("fk_endereco")));
+
+                lista.add(pes);
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro no comando SQL de Consulta: " + e.getMessage() + "\n" + "Comando com erro: " + sql);
+        }
+        return lista;        
+    }    
+
+    public Cliente buscarCliente(int codigo){
+        String sql = "SELECT id_cliente, cod_cliente, fk_pessoa FROM cliente WHERE (cod_cliente = ?);";
+        Cliente cli = new Cliente();
+        try {
+            PreparedStatement preparador = con.prepareStatement(sql);
+            preparador.setInt(1, codigo);
+
+            ResultSet resultado = preparador.executeQuery();
+            resultado.next();
+
+            cli.setCodCliente(resultado.getInt("cod_cliente"));
+            cli.setPessoa(this.buscarPessoa(resultado.getInt("fk_pessoa")));
+
+            preparador.close();
+        } catch (SQLException e) {
+            System.out.println("Erro no comando SQL de Consulta: " + e.getMessage() + "\n" + "Comando com erro: " + sql);
+        }
+        return cli;
+    }    
+
+    public List<Cliente> buscarTodosCliente(){
+        String sql = "SELECT id_cliente, cod_cliente, fk_pessoa FROM cliente;";
+        List<Cliente> lista = new ArrayList<>();
+        ResultSet resultado = executar(sql);
+        try {
+            while(resultado.next()){
+                Cliente cli = new Cliente();
+                cli.setCodCliente(resultado.getInt("cod_cliente"));
+                cli.setPessoa(this.buscarPessoa(resultado.getInt("fk_pessoa")));
+
+                lista.add(cli);
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro no comando SQL de Consulta: " + e.getMessage() + "\n" + "Comando com erro: " + sql);
+        }
+        return lista;        
+    }
+    
+    public Fornecedor buscarFornecedor(int codigo){
+        String sql = "SELECT id_fornecedor, cod_fornecedor, fk_pessoa FROM fornecedor (cod_fornecedor = ?);";
+        Fornecedor frn = new Fornecedor();
+        try {
+            PreparedStatement preparador = con.prepareStatement(sql);
+            preparador.setInt(1, codigo);
+
+            ResultSet resultado = preparador.executeQuery();
+            resultado.next();
+
+            frn.setCodFornecedor(resultado.getInt("cod_fornecedor"));
+            frn.setPessoa(this.buscarPessoa(resultado.getInt("fk_pessoa")));
+
+            preparador.close();
+        } catch (SQLException e) {
+            System.out.println("Erro no comando SQL de Consulta: " + e.getMessage() + "\n" + "Comando com erro: " + sql);
+        }
+        return frn;
+    }    
+
+    public List<Fornecedor> buscarTodosFornecedor(){
+        String sql = "SELECT id_fornecedor, cod_fornecedor, fk_pessoa FROM fornecedor;";
+        List<Fornecedor> lista = new ArrayList<>();
+        ResultSet resultado = executar(sql);
+        try {
+            while(resultado.next()){
+                Fornecedor frn = new Fornecedor();
+                frn.setCodFornecedor(resultado.getInt("cod_fornecedor"));
+                frn.setPessoa(this.buscarPessoa(resultado.getInt("fk_pessoa")));
+
+                lista.add(frn);
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro no comando SQL de Consulta: " + e.getMessage() + "\n" + "Comando com erro: " + sql);
+        }
+        return lista;        
+    }    
     
 }

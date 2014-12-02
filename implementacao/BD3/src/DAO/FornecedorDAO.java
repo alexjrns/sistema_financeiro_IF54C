@@ -7,6 +7,7 @@ package DAO;
 
 import Entidades.Fornecedor;
 import JDBC.ExecutaBanco;
+import java.util.List;
 
 /**
  *
@@ -20,12 +21,30 @@ public class FornecedorDAO {
     }
     
     public boolean cadastrar(Fornecedor fornecedor){
-        PessoaDAO pessoa = new PessoaDAO();
-                
-        String[][] vetFornecedor = { {"id_fornecedor", ""}, {"cod_fornecedor", ""}, {"fk_pessoa", ""} };
+        String pessoa = String.valueOf(fornecedor.getPessoa().getChave());
+        String[][] vetFornecedor = { {"id_fornecedor", ""}, {"cod_fornecedor", ""}, {"fk_pessoa", pessoa} };
         
-        pessoa.cadastrar(fornecedor.getPessoa());
-
         return exeBanco.cadastrar("fornecedor", vetFornecedor);
     }
+    
+    public boolean alterar(Fornecedor fornecedor){
+        String codigo = String.valueOf(fornecedor.getCodFornecedor());
+        String pessoa = String.valueOf(fornecedor.getPessoa().getChave());
+        String[][] vetFornecedor = { {"id_fornecedor", ""}, {"cod_fornecedor", codigo}, {"fk_pessoa", pessoa} };
+        
+        return exeBanco.alterar("fornecedor", vetFornecedor);
+    }
+    
+    public boolean remover(Fornecedor fornecedor){
+        String codigo = String.valueOf(fornecedor.getCodFornecedor());
+        return exeBanco.remover("fornecedor", ("fornecedor.cod_fornecedor = " + codigo));
+    }
+    
+    public Fornecedor consultar(int codigo){
+        return exeBanco.buscarFornecedor(codigo);
+    }
+
+    public List<Fornecedor> consultarTodos(){
+        return exeBanco.buscarTodosFornecedor();
+    }    
 }

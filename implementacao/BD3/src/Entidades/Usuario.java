@@ -18,6 +18,7 @@ public class Usuario {
     private boolean desativado;
 
     public Usuario() {
+        super();
     }
 
     public Usuario(int codUsuario, String nomeUsuario, String login, String senha, boolean tesoureiro, boolean desativado) {
@@ -27,6 +28,15 @@ public class Usuario {
         this.senha = senha;
         this.tesoureiro = tesoureiro;
         this.desativado = desativado;
+    }
+    
+    public Usuario(String login, String senha){
+        this.codUsuario = 0;
+        this.nomeUsuario = "";
+        this.login = login;
+        this.senha = senha;
+        this.tesoureiro = false;
+        this.desativado = false;
     }
 
     public int getCodUsuario() {

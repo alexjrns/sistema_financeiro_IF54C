@@ -5,7 +5,7 @@
  */
 package Entidades;
 
-import GUI.Principal;
+import GUI.Login;
 
 /**
  *
@@ -18,8 +18,8 @@ public class BD3 {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        Principal p = new Principal();
-        p.setVisible(true);
+        Login l = new Login();
+        l.setVisible(true);
     }
     
 }

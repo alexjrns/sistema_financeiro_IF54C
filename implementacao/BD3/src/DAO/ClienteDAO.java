@@ -8,6 +8,7 @@ package DAO;
 import Entidades.Cliente;
 
 import JDBC.ExecutaBanco;
+import java.util.List;
 
 /**
  *
@@ -49,6 +50,18 @@ public class ClienteDAO {
                 return false;
             }
         } else return false;
+    }
+    
+    public boolean remover(Cliente cliente){
+        String codigo = String.valueOf(cliente.getCodCliente());
+        return exeBanco.remover("cliente", ("cliente.cod_cliente = " + codigo));
+    }
+    
+    public Cliente consultar(int codigo){
+        return exeBanco.buscarCliente(codigo);
+    }
+
+    public List<Cliente> consultarTodos(){
+        return exeBanco.buscarTodosCliente();
     }    
 }
-
