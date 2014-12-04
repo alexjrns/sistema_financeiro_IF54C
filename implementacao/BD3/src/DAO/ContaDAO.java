@@ -8,6 +8,7 @@ package DAO;
 import Entidades.Conta;
 import JDBC.ExecutaBanco;
 import java.util.List;
+import javax.swing.table.TableModel;
 
 public class ContaDAO {
     private ExecutaBanco exeBanco = new ExecutaBanco();
@@ -15,6 +16,14 @@ public class ContaDAO {
     public ContaDAO(){
         super();
     }
+    
+    public boolean salvar(Conta conta){
+        int codg = exeBanco.codAtual("conta");		
+        if((conta.getCodConta()!= 0) && (conta.getCodConta()< codg))
+            return alterar(conta);
+        else
+            return cadastrar(conta);
+    }      
     
     public boolean cadastrar(Conta conta){
 	String descricao = conta.getDescricao();
@@ -35,7 +44,7 @@ public class ContaDAO {
         java.sql.Date dtaRegistro = new java.sql.Date(conta.getDataRegistro().getTimeInMillis());
         String dataRegistro = String.valueOf(dtaRegistro);
 
-        String[][] vetConta = { {"id_conta", ""}, {"cod_conta", codigo}, {"des_conta", descricao}, {"val_saldo", saldo}, {"val_limitecredito", limiteCredito} , {"dat_registro", dataRegistro} };
+        String[][] vetConta = { {"cod_conta", codigo}, {"des_conta", descricao}, {"val_saldo", saldo}, {"val_limitecredito", limiteCredito} , {"dat_registro", dataRegistro} };
         return exeBanco.alterar("conta", vetConta);
     }
     
@@ -43,12 +52,16 @@ public class ContaDAO {
         String codigo = String.valueOf(conta.getCodConta());
         return exeBanco.remover("conta", ("conta.cod_conta = " + codigo));
     }
-    
+
     public Conta consultar(int codigo){
         return exeBanco.buscarConta(codigo);
     }
-    
+
     public List<Conta> consultarTodos(){
         return exeBanco.buscarTodosConta();
+    }
+
+    public TableModel consultarTodosTable(){
+        return exeBanco.consultarContas();
     }    
 }

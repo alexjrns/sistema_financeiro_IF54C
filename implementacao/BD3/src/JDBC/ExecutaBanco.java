@@ -21,7 +21,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
+import javax.swing.table.TableModel;
+import net.proteanit.sql.DbUtils;
 /**
  *
  * @author Alex
@@ -387,7 +388,7 @@ public class ExecutaBanco {
 
             ResultSet resultado = preparador.executeQuery();
             resultado.next();
-
+            end.setChave(resultado.getInt("id_endereco"));
             end.setCodEndereco(resultado.getInt("cod_endereco"));
             end.setNumero(resultado.getString("des_numero"));
             end.setCep(resultado.getString("val_cep"));
@@ -409,6 +410,7 @@ public class ExecutaBanco {
         try {
             while(resultado.next()){
                 Endereco end = new Endereco();
+                end.setChave(resultado.getInt("id_endereco"));
                 end.setCodEndereco(resultado.getInt("cod_endereco"));
                 end.setNumero(resultado.getString("des_numero"));
                 end.setCep(resultado.getString("val_cep"));
@@ -436,7 +438,7 @@ public class ExecutaBanco {
 
             pes.setChave(resultado.getInt("id_pessoa"));
             pes.setCodPessoa(resultado.getInt("cod_pessoa"));
-            pes.setNome(resultado.getString("des_numero"));
+            pes.setNome(resultado.getString("des_nome"));
             pes.setTelefone(resultado.getString("val_telefone"));
             pes.setEndereco(this.buscarEndereco(resultado.getInt("fk_endereco")));
 
@@ -542,6 +544,53 @@ public class ExecutaBanco {
             System.out.println("Erro no comando SQL de Consulta: " + e.getMessage() + "\n" + "Comando com erro: " + sql);
         }
         return lista;        
+    }
+
+    public TableModel consultarUsuarios(){
+        return consultar("SELECT cod_usuario AS \"Código\", des_nome AS \"Nome\", val_login AS \"Login\", opt_tesoureiro AS \"Tesoureiro\", opt_desativado AS \"Desativado?\" FROM usuario;");
+    }
+
+    public TableModel consultarClassificacoes(){
+        return consultar("SELECT cod_classificacao AS \"Código\", des_classificacao AS \"Descrição\", des_tipooperacao AS \"Tipo da Operação\" FROM classificacao;");
+    }
+    
+    public TableModel consultarContas(){
+        return consultar("SELECT cod_conta AS \"Código\", val_numero AS \"Número da conta\", des_conta AS \"Descrição\", val_saldo AS \"Saldo\", val_limitecredito AS \"Limite de Crédito\", dat_registro AS \"Data de Registro\" FROM conta;");
+    }
+    
+    public TableModel consultarLancamentos(){
+        return consultar("SELECT "
+                + "cod_lancamento AS \"Código\", "
+                + "val_numdocumento AS \"Número do documento\", "
+                + "dat_lancamento AS \"Data do lançamento\", "
+                + "val_lancamento AS \"Valor\", "
+                + "val_vinculado AS \"Valor vinculado\", "
+                + "des_origem AS \"Origem\", "
+                + "des_conta \"Conta\", "
+                + "des_classificacao AS \"Classificação\" "
+                + "FROM "
+                + "lancamento "
+                + "INNER JOIN conta ON conta.id_conta = lancamento.fk_conta "
+                + "INNER JOIN classificacao ON classificacao.id_classificacao = lancamento.fk_classificacao;");
+    }
+
+    public TableModel consultarEnderecos(){
+        return consultar("SELECT cod_endereco, des_logradouro, des_numero, val_cep, des_bairro, des_cidade, des_estado FROM endereco;");
+    }
+    
+    public TableModel consultarPessoas(){
+        return consultar("SELECT cod_pessoa, des_nome, val_documento, val_telefone, fk_endereco FROM pessoa;");
+    }
+    
+    public TableModel consultarClientes(){
+        return consultar("SELECT cod_cliente AS \"Código\", pessoa.val_documento AS \"CPF/CNPJ\", pessoa.des_nome AS \"Nome\", endereco.des_logradouro AS \"Logradouro\", endereco.des_numero AS \"Número\", endereco.val_cep AS \"CEP\", endereco.des_bairro AS \"Bairro\", endereco.des_cidade AS \"Cidade\", endereco.des_estado AS \"Estado\", pessoa.val_telefone AS \"Telefone\" FROM cliente INNER JOIN pessoa ON pessoa.id_pessoa = cliente.fk_pessoa INNER JOIN endereco ON endereco.id_endereco = pessoa.fk_endereco;");
+    }
+
+    public TableModel consultarFornecedores(){
+        return consultar("SELECT cod_fornecedor AS \"Código\", pessoa.val_documento AS \"CPF/CNPJ\", pessoa.des_nome AS \"Nome\", endereco.des_logradouro AS \"Logradouro\", endereco.des_numero AS \"Número\", endereco.val_cep AS \"CEP\", endereco.des_bairro AS \"Bairro\", endereco.des_cidade AS \"Cidade\", endereco.des_estado AS \"Estado\", pessoa.val_telefone AS \"Telefone\" FROM fornecedor INNER JOIN pessoa ON pessoa.id_pessoa = fornecedor.fk_pessoa INNER JOIN endereco ON endereco.id_endereco = pessoa.fk_endereco;");
     }    
     
+    private TableModel consultar(String sql) {
+        return DbUtils.resultSetToTableModel(executar(sql));
+    }
 }

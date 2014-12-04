@@ -8,6 +8,7 @@ package DAO;
 import Entidades.Fornecedor;
 import JDBC.ExecutaBanco;
 import java.util.List;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -20,11 +21,27 @@ public class FornecedorDAO {
         super();
     }
     
+    public boolean salvar(Fornecedor fornecedor){
+        int codg = exeBanco.codAtual("fornecedor");		
+        if((fornecedor.getCodFornecedor()!= 0) && (fornecedor.getCodFornecedor()< codg))
+            return alterar(fornecedor);
+        else
+            return cadastrar(fornecedor);
+    }    
+
     public boolean cadastrar(Fornecedor fornecedor){
-        String pessoa = String.valueOf(fornecedor.getPessoa().getChave());
-        String[][] vetFornecedor = { {"id_fornecedor", ""}, {"cod_fornecedor", ""}, {"fk_pessoa", pessoa} };
-        
-        return exeBanco.cadastrar("fornecedor", vetFornecedor);
+        PessoaDAO pesDAO = new PessoaDAO();
+        exeBanco.abreTransacao();
+        if(pesDAO.cadastrar(fornecedor.getPessoa())){
+            String pessoa = String.valueOf(exeBanco.buscarPessoa(fornecedor.getPessoa().getCodPessoa()).getChave());
+            String[][] vetFornecedor = { {"id_fornecedor", ""}, {"cod_fornecedor", ""}, {"fk_pessoa", pessoa} };
+            if(exeBanco.cadastrar("fornecedor", vetFornecedor)){
+                return exeBanco.commit();
+            } else{
+                exeBanco.rollback();
+                return false;
+            }
+        } else return false;
     }
     
     public boolean alterar(Fornecedor fornecedor){
@@ -46,5 +63,9 @@ public class FornecedorDAO {
 
     public List<Fornecedor> consultarTodos(){
         return exeBanco.buscarTodosFornecedor();
+    }
+    
+    public TableModel consultarTodosTable(){
+        return exeBanco.consultarFornecedores();
     }    
 }

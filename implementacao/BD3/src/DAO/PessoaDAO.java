@@ -26,8 +26,9 @@ public class PessoaDAO {
             String nome = pessoa.getNome();
             String documento = pessoa.getDocumento();
             String telefone = pessoa.getTelefone();
-            String endereco = String.valueOf(pessoa.getEndereco().getChave());
-            String[][] vetPessoa = { {"id_pessoa", ""}, {"cod_pessoa", ""}, {"des_nome", nome}, {"val_documento", documento}, {"des_telefone", telefone}, {"fk_endereco", endereco} };
+            String codEndereco = String.valueOf(exeBanco.buscarEndereco(pessoa.getEndereco().getCodEndereco()).getChave());
+
+            String[][] vetPessoa = { {"id_pessoa", ""}, {"cod_pessoa", ""}, {"des_nome", nome}, {"val_documento", documento}, {"val_telefone", telefone}, {"fk_endereco", codEndereco} };
             if(exeBanco.cadastrar("pessoa", vetPessoa)){
                 return exeBanco.commit();
             } else{
@@ -43,8 +44,10 @@ public class PessoaDAO {
             String nome = pessoa.getNome();
             String documento = pessoa.getDocumento();
             String telefone = pessoa.getTelefone();
-            String endereco = String.valueOf(pessoa.getEndereco().getChave());
-            String[][] vetPessoa = { {"id_pessoa", ""}, {"cod_pessoa", ""}, {"des_nome", nome}, {"val_documento", documento}, {"des_telefone", telefone}, {"fk_endereco", endereco} };
+            String codEndereco = String.valueOf(exeBanco.buscarEndereco(pessoa.getEndereco().getCodEndereco()).getChave());
+            System.out.println("Endereco chave: " + String.valueOf(exeBanco.buscarEndereco(pessoa.getEndereco().getCodEndereco()).getChave()));
+
+            String[][] vetPessoa = { {"id_pessoa", ""}, {"cod_pessoa", ""}, {"des_nome", nome}, {"val_documento", documento}, {"des_telefone", telefone}, {"fk_endereco", codEndereco} };
             if(exeBanco.cadastrar("pessoa", vetPessoa)){
                 return exeBanco.commit();
             } else{
@@ -56,7 +59,22 @@ public class PessoaDAO {
 
     public boolean remover(Pessoa pessoa){
         String codigo = String.valueOf(pessoa.getCodPessoa());
-        return exeBanco.remover("pessoa", ("pessoa.cod_pessoa = " + codigo));
+        String codEndereco = String.valueOf(pessoa.getEndereco().getCodEndereco());
+        exeBanco.abreTransacao();
+        if(exeBanco.remover("pessoa", ("pessoa.cod_pessoa = " + codigo))){
+            exeBanco.abreTransacao();
+            if(exeBanco.remover("endereco", ("endereco.cod_endereco = " + codEndereco))){
+                exeBanco.commit();
+                return exeBanco.commit();
+            }else{
+                exeBanco.rollback();
+                exeBanco.rollback();
+                return false;
+            }
+        }else{
+            exeBanco.rollback();
+            return false;
+        }
     }
     
     public Pessoa consultar(int codigo){

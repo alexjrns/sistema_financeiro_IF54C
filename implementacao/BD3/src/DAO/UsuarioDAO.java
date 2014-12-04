@@ -9,6 +9,7 @@ import Entidades.Usuario;
 import Entidades.Utilitario;
 import JDBC.ExecutaBanco;
 import java.util.List;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -24,6 +25,14 @@ public class UsuarioDAO {
     public Usuario autenticar(Usuario usuario){
         return exeBanco.autenticar(usuario);        
     }
+    
+    public boolean salvar(Usuario usuario){
+        int codg = exeBanco.codAtual("usuario");		
+        if((usuario.getCodUsuario() != 0) && (usuario.getCodUsuario() < codg))
+            return alterar(usuario);
+        else
+            return cadastrar(usuario);
+    }    
     
     public boolean cadastrar(Usuario usuario){
 	String nome = usuario.getNomeUsuario();
@@ -42,7 +51,7 @@ public class UsuarioDAO {
         String senha = Utilitario.md5(usuario.getSenha());
         String tesoureiro = usuario.isTesoureiro() ? "Sim" : "Nao";
         String desativado = usuario.isDesativado()? "Sim" : "Nao";
-        String[][] vet = { {"id_usuario", ""}, {"cod_usuario", codigo}, {"des_nome", nome}, {"val_login", login} , {"val_senha", senha}, {"opt_tesoureiro", tesoureiro}, {"opt_desativado", desativado} };
+        String[][] vet = { {"cod_usuario", codigo}, {"des_nome", nome}, {"val_login", login} , {"val_senha", senha}, {"opt_tesoureiro", tesoureiro}, {"opt_desativado", desativado} };
         return exeBanco.alterar("usuario", vet);
     }
 
@@ -53,6 +62,10 @@ public class UsuarioDAO {
 
     public Usuario consultar(int codigo){
         return exeBanco.buscarUsuario(codigo);
+    }
+    
+    public TableModel consultarTodosTable(){
+        return exeBanco.consultarUsuarios();
     }
 
     public List<Usuario> consultarTodos(){

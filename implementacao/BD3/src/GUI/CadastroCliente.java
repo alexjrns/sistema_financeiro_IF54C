@@ -5,20 +5,33 @@
  */
 package GUI;
 
+import DAO.ClienteDAO;
 import Entidades.Cliente;
+import Entidades.Endereco;
+import Entidades.Pessoa;
+import Entidades.Usuario;
+import JDBC.ExecutaBanco;
+import java.awt.Toolkit;
 import javax.swing.JOptionPane;
+
 
 /**
  *
  * @author JoãoRicardo
  */
 public class CadastroCliente extends javax.swing.JFrame {
-
+    private Usuario usu;
+    private ExecutaBanco exe;
+    private ClienteDAO cliDAO;
+    
     /**
      * Creates new form CadastroCliente
      */
     public CadastroCliente() {
         initComponents();
+        setIcon();
+        exe = new ExecutaBanco();
+        cliDAO = new ClienteDAO();
     }
 
     /**
@@ -30,12 +43,11 @@ public class CadastroCliente extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnEnviar = new javax.swing.JToggleButton();
         lblCodigo = new javax.swing.JLabel();
         lblLogin = new javax.swing.JLabel();
         txtRazaoSocial = new javax.swing.JTextField();
         lblNome = new javax.swing.JLabel();
-        txtCNPJ = new javax.swing.JTextField();
+        txtDocumento = new javax.swing.JTextField();
         lblSenha = new javax.swing.JLabel();
         txtLogradouro = new javax.swing.JTextField();
         txtNumero = new javax.swing.JTextField();
@@ -49,76 +61,189 @@ public class CadastroCliente extends javax.swing.JFrame {
         txtTelefone = new javax.swing.JTextField();
         lblSenha5 = new javax.swing.JLabel();
         txtCodigo = new javax.swing.JTextField();
+        btnNovo = new javax.swing.JButton();
+        btnAlterar = new javax.swing.JButton();
+        btnSalvar = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
+        btnRemover = new javax.swing.JButton();
+        btnPesquisar = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblDados = new javax.swing.JTable();
+        lblCidade = new javax.swing.JLabel();
+        txtCidade = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Cadastro de clientes");
         setResizable(false);
-
-        btnEnviar.setText("Enviar");
-        btnEnviar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEnviarActionPerformed(evt);
-            }
-        });
 
         lblCodigo.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         lblCodigo.setText("Código");
 
         lblLogin.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        lblLogin.setText("Razão Social");
+        lblLogin.setText("Nome/Razão Social");
+
+        txtRazaoSocial.setEditable(false);
 
         lblNome.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        lblNome.setText("CNPJ");
+        lblNome.setText("CPF/CNPJ");
+
+        txtDocumento.setEditable(false);
 
         lblSenha.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         lblSenha.setText("Logradouro");
 
+        txtLogradouro.setEditable(false);
+
+        txtNumero.setEditable(false);
+
         lblSenha1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         lblSenha1.setText("Número");
+
+        txtCEP.setEditable(false);
 
         lblSenha2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         lblSenha2.setText("CEP");
 
+        txtBairro.setEditable(false);
+
         lblSenha3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         lblSenha3.setText("Bairro");
+
+        txtEstado.setEditable(false);
 
         lblSenha4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         lblSenha4.setText("Estado");
 
+        txtTelefone.setEditable(false);
+
         lblSenha5.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         lblSenha5.setText("Telefone");
+
+        txtCodigo.setEditable(false);
+
+        btnNovo.setText("Novo");
+        btnNovo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNovoActionPerformed(evt);
+            }
+        });
+
+        btnAlterar.setText("Alterar");
+        btnAlterar.setEnabled(false);
+        btnAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAlterarActionPerformed(evt);
+            }
+        });
+
+        btnSalvar.setText("Salvar");
+        btnSalvar.setEnabled(false);
+        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarActionPerformed(evt);
+            }
+        });
+
+        btnCancelar.setText("Cancelar");
+        btnCancelar.setEnabled(false);
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
+
+        btnRemover.setText("Remover");
+        btnRemover.setEnabled(false);
+        btnRemover.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoverActionPerformed(evt);
+            }
+        });
+
+        btnPesquisar.setText("Pesquisar");
+        btnPesquisar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPesquisarActionPerformed(evt);
+            }
+        });
+
+        tblDados.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        tblDados.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblDadosMouseClicked(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                tblDadosMousePressed(evt);
+            }
+        });
+        tblDados.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tblDadosKeyPressed(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblDados);
+
+        lblCidade.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblCidade.setText("Cidade");
+
+        txtCidade.setEditable(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblLogin, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblCodigo, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblNome, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblSenha, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblSenha1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblSenha2, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblSenha3, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblSenha4, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblSenha5, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(txtNumero)
-                    .addComponent(txtRazaoSocial, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtCNPJ, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtLogradouro, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
-                    .addComponent(txtCEP, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtBairro, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtEstado, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtTelefone, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtCodigo, javax.swing.GroupLayout.Alignment.LEADING))
-                .addGap(95, 95, 95))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(158, 158, 158)
-                .addComponent(btnEnviar)
-                .addContainerGap(204, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblCodigo, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblNome, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblSenha, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblSenha1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblSenha2, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblSenha3, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblSenha4, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblSenha5, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblLogin, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblCidade, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txtNumero)
+                            .addComponent(txtRazaoSocial, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtDocumento, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtLogradouro, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
+                            .addComponent(txtCEP, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtBairro, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtEstado, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtTelefone, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtCodigo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCidade))
+                        .addGap(79, 79, 79))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btnNovo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnAlterar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnSalvar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnCancelar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnRemover)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnPesquisar)
+                        .addContainerGap())))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -129,18 +254,18 @@ public class CadastroCliente extends javax.swing.JFrame {
                     .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtCNPJ, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtDocumento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblNome))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtRazaoSocial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblLogin))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblLogin)
+                    .addComponent(txtRazaoSocial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblSenha)
                     .addComponent(txtLogradouro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtNumero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblSenha1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -151,7 +276,11 @@ public class CadastroCliente extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtBairro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblSenha3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtCidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblCidade))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblSenha4))
@@ -159,25 +288,241 @@ public class CadastroCliente extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblSenha5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnEnviar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnSalvar)
+                    .addComponent(btnNovo)
+                    .addComponent(btnAlterar)
+                    .addComponent(btnCancelar)
+                    .addComponent(btnPesquisar)
+                    .addComponent(btnRemover))
+                .addContainerGap())
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
+    public Usuario getUsuarioLogado(){
+        return this.usu;
+    }
+    
+    public void setUsuarioLogado(Usuario usuario){
+        this.usu = usuario;
+    }
+
+    private Cliente setCliente(){
+        int codCliente = Integer.parseInt(txtCodigo.getText());
+        String documento = txtDocumento.getText();
+        String nome = txtRazaoSocial.getText();
+        String logradouro = txtLogradouro.getText();
+        String numero = txtNumero.getText();
+        String CEP = txtCEP.getText();
+        String bairro = txtBairro.getText();
+        String cidade = txtCidade.getText();
+        String estado = txtEstado.getText();
+        String telefone = txtTelefone.getText();
         
-        Cliente cliente = new Cliente();
-        
-        cliente.setCodCliente(Integer.parseInt(txtCodigo.getText()));
-        
-        String st = "Welcome";
-        JOptionPane.showMessageDialog(null, cliente.getCodCliente());
-        
-    }//GEN-LAST:event_btnEnviarActionPerformed
+        Endereco endereco = new Endereco(0, exe.codAtual("endereco"), logradouro, numero, CEP, bairro, cidade, estado);
+        Pessoa pessoa = new Pessoa(0, exe.codAtual("pessoa"), nome, documento, endereco, telefone);
+        return new Cliente(codCliente, pessoa);
+    }    
+    
+    private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
+        txtCodigo.setText(String.valueOf(exe.codAtual("cliente")));
+        txtDocumento.setText("");
+        txtDocumento.setEditable(true);
+        txtRazaoSocial.setText("");
+        txtRazaoSocial.setEditable(true);
+        txtLogradouro.setText("");
+        txtLogradouro.setEditable(true);
+        txtNumero.setText("");
+        txtNumero.setEditable(true);
+        txtCEP.setText("");
+        txtCEP.setEditable(true);
+        txtBairro.setText("");
+        txtBairro.setEditable(true);
+        txtCidade.setText("");
+        txtCidade.setEditable(true);
+        txtEstado.setText("");
+        txtEstado.setEditable(true);
+        txtTelefone.setText("");
+        txtTelefone.setEditable(true);        
+
+        btnNovo.setEnabled(false);
+        btnPesquisar.setEnabled(false);
+        btnAlterar.setEnabled(false);
+        btnSalvar.setEnabled(true);
+        btnCancelar.setEnabled(true);
+        btnRemover.setEnabled(false);
+    }//GEN-LAST:event_btnNovoActionPerformed
+
+    private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
+        txtDocumento.setEditable(true);
+        txtRazaoSocial.setEditable(true);
+        txtLogradouro.setEditable(true);
+        txtNumero.setEditable(true);
+        txtCEP.setEditable(true);
+        txtBairro.setEditable(true);
+        txtCidade.setEditable(true);
+        txtEstado.setEditable(true);
+        txtTelefone.setEditable(true);
+
+        btnNovo.setEnabled(false);
+        btnPesquisar.setEnabled(false);
+        btnAlterar.setEnabled(false);
+        btnSalvar.setEnabled(true);
+        btnCancelar.setEnabled(true);
+        btnRemover.setEnabled(false);
+    }//GEN-LAST:event_btnAlterarActionPerformed
+
+    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+        if(cliDAO.salvar(this.setCliente())){
+            txtDocumento.setEditable(false);
+            txtRazaoSocial.setEditable(false);
+            txtLogradouro.setEditable(false);
+            txtNumero.setEditable(false);
+            txtCEP.setEditable(false);
+            txtBairro.setEditable(false);
+            txtCidade.setEditable(false);
+            txtEstado.setEditable(false);
+            txtTelefone.setEditable(false);
+
+            btnNovo.setEnabled(true);
+            btnPesquisar.setEnabled(true);
+            btnAlterar.setEnabled(true);
+            btnSalvar.setEnabled(false);
+            btnCancelar.setEnabled(false);
+            btnRemover.setEnabled(false);
+            tblDados.setModel(cliDAO.consultarTodosTable());
+        }
+    }//GEN-LAST:event_btnSalvarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        txtCodigo.setText("");
+        txtDocumento.setText("");
+        txtDocumento.setEditable(false);
+        txtRazaoSocial.setText("");
+        txtRazaoSocial.setEditable(false);
+        txtLogradouro.setText("");
+        txtLogradouro.setEditable(false);
+        txtNumero.setText("");
+        txtNumero.setEditable(false);
+        txtCEP.setText("");
+        txtCEP.setEditable(false);
+        txtBairro.setText("");
+        txtBairro.setEditable(false);
+        txtCidade.setText("");
+        txtCidade.setEditable(false);
+        txtEstado.setText("");
+        txtEstado.setEditable(false);
+        txtTelefone.setText("");
+        txtTelefone.setEditable(false);   
+
+        btnNovo.setEnabled(true);
+        btnPesquisar.setEnabled(true);
+        btnAlterar.setEnabled(false);
+        btnSalvar.setEnabled(false);
+        btnCancelar.setEnabled(false);
+        btnRemover.setEnabled(false);
+        tblDados.setModel(cliDAO.consultarTodosTable());
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverActionPerformed
+       int result = (JOptionPane.showConfirmDialog(null, "Tem certeza que deseja excluir esse registro?", "Confirmção", JOptionPane.YES_NO_OPTION));
+        if(result == JOptionPane.YES_NO_OPTION){
+            if(cliDAO.remover(this.setCliente())){
+                txtCodigo.setText("");
+                txtDocumento.setText("");
+                txtDocumento.setEditable(false);
+                txtRazaoSocial.setText("");
+                txtRazaoSocial.setEditable(false);
+                txtLogradouro.setText("");
+                txtLogradouro.setEditable(false);
+                txtNumero.setText("");
+                txtNumero.setEditable(false);
+                txtCEP.setText("");
+                txtCEP.setEditable(false);
+                txtBairro.setText("");
+                txtBairro.setEditable(false);
+                txtCidade.setText("");
+                txtCidade.setEditable(false);
+                txtEstado.setText("");
+                txtEstado.setEditable(false);
+                txtTelefone.setText("");
+                txtTelefone.setEditable(false); 
+
+                btnNovo.setEnabled(true);
+                btnPesquisar.setEnabled(true);
+                btnAlterar.setEnabled(false);
+                btnSalvar.setEnabled(false);
+                btnCancelar.setEnabled(false);
+                btnRemover.setEnabled(false);
+
+                tblDados.setModel(cliDAO.consultarTodosTable());
+            }
+        }
+    }//GEN-LAST:event_btnRemoverActionPerformed
+
+    private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
+        tblDados.setModel(cliDAO.consultarTodosTable());
+        txtCodigo.setText("");
+        txtDocumento.setText("");
+        txtDocumento.setEditable(false);
+        txtRazaoSocial.setText("");
+        txtRazaoSocial.setEditable(false);
+        txtLogradouro.setText("");
+        txtLogradouro.setEditable(false);
+        txtNumero.setText("");
+        txtNumero.setEditable(false);
+        txtCEP.setText("");
+        txtCEP.setEditable(false);
+        txtBairro.setText("");
+        txtBairro.setEditable(false);
+        txtCidade.setText("");
+        txtCidade.setEditable(false);
+        txtEstado.setText("");
+        txtEstado.setEditable(false);
+        txtTelefone.setText("");
+        txtTelefone.setEditable(false);        
+
+        btnNovo.setEnabled(true);
+        btnPesquisar.setEnabled(true);
+        btnAlterar.setEnabled(false);
+        btnSalvar.setEnabled(false);
+        btnCancelar.setEnabled(false);
+        btnRemover.setEnabled(false);
+    }//GEN-LAST:event_btnPesquisarActionPerformed
+
+    private void tblDadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDadosMouseClicked
+        int row = tblDados.getSelectedRow();
+        txtCodigo.setText(tblDados.getValueAt(row, 0).toString());
+        txtDocumento.setText(tblDados.getValueAt(row , 1).toString());
+        txtRazaoSocial.setText(tblDados.getValueAt(row, 2).toString());
+        txtLogradouro.setText(tblDados.getValueAt(row, 3).toString());
+        txtNumero.setText(tblDados.getValueAt(row, 4).toString());
+        txtCEP.setText(tblDados.getValueAt(row, 5).toString());
+        txtBairro.setText(tblDados.getValueAt(row, 6).toString());
+        txtCidade.setText(tblDados.getValueAt(row, 7).toString());
+        txtEstado.setText(tblDados.getValueAt(row, 8).toString());
+        txtTelefone.setText(tblDados.getValueAt(row, 9).toString());
+
+        btnAlterar.setEnabled(true);
+        if (usu.isTesoureiro())
+            btnRemover.setEnabled(true);
+        else
+            btnRemover.setEnabled(false);
+    }//GEN-LAST:event_tblDadosMouseClicked
+
+    private void tblDadosMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDadosMousePressed
+
+    }//GEN-LAST:event_tblDadosMousePressed
+
+    private void tblDadosKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblDadosKeyPressed
+
+    }//GEN-LAST:event_tblDadosKeyPressed
 
     /**
      * @param args the command line arguments
@@ -214,8 +559,19 @@ public class CadastroCliente extends javax.swing.JFrame {
         });
     }
 
+    private void setIcon() {
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("imagens/sisfi_icone.png")));
+    }    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JToggleButton btnEnviar;
+    private javax.swing.JButton btnAlterar;
+    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnNovo;
+    private javax.swing.JButton btnPesquisar;
+    private javax.swing.JButton btnRemover;
+    private javax.swing.JButton btnSalvar;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblCidade;
     private javax.swing.JLabel lblCodigo;
     private javax.swing.JLabel lblLogin;
     private javax.swing.JLabel lblNome;
@@ -225,10 +581,12 @@ public class CadastroCliente extends javax.swing.JFrame {
     private javax.swing.JLabel lblSenha3;
     private javax.swing.JLabel lblSenha4;
     private javax.swing.JLabel lblSenha5;
+    private javax.swing.JTable tblDados;
     private javax.swing.JTextField txtBairro;
     private javax.swing.JTextField txtCEP;
-    private javax.swing.JTextField txtCNPJ;
+    private javax.swing.JTextField txtCidade;
     private javax.swing.JTextField txtCodigo;
+    private javax.swing.JTextField txtDocumento;
     private javax.swing.JTextField txtEstado;
     private javax.swing.JTextField txtLogradouro;
     private javax.swing.JTextField txtNumero;

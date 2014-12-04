@@ -103,8 +103,9 @@ public class Login extends javax.swing.JFrame {
                     .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnSair, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
-                    .addComponent(btnLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(btnLogin, javax.swing.GroupLayout.DEFAULT_SIZE, 47, Short.MAX_VALUE)
+                    .addComponent(btnSair, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -113,18 +114,24 @@ public class Login extends javax.swing.JFrame {
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         String login = txtLogin.getText();
-        String senha = txtSenha.getPassword().toString();
+        char[] sna = txtSenha.getPassword();
+        String senha = "";
+        for(int i = 0; i < sna.length; i++){
+            senha += sna[i];
+        }
         
         UsuarioDAO usuDAO = new UsuarioDAO();
-        //if(usuDAO.autenticar(new Usuario(login, senha)) != null){
+        Usuario usu = usuDAO.autenticar(new Usuario(login, senha));
+        if(usu != null){
             this.setVisible(false);
             Principal p = new Principal();
+            p.setUsuarioLogado(usu);
             p.setVisible(true);
-       // } else JOptionPane.showMessageDialog(null, "Usuário e/ou senha inválidos!", "Atenção", JOptionPane.WARNING_MESSAGE);
+        } else JOptionPane.showMessageDialog(null, "Usuário e/ou senha inválidos!", "Entrada restringida", JOptionPane.WARNING_MESSAGE);
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
-        
+        System.exit(0);
     }//GEN-LAST:event_btnSairActionPerformed
 
     /**

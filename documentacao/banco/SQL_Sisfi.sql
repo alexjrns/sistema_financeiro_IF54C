@@ -1,6 +1,8 @@
 ﻿
 CREATE TABLE public.conta (
                 id_conta SERIAL NOT NULL,
+                cod_conta INTEGER NOT NULL,
+				val_numero VARCHAR NOT NULL,
                 des_conta VARCHAR NOT NULL,
                 val_saldo DOUBLE PRECISION NOT NULL,
                 val_limitecredito DOUBLE PRECISION NOT NULL,
@@ -25,8 +27,9 @@ CREATE TABLE public.endereco (
 CREATE TABLE public.pessoa (
                 id_pessoa SERIAL NOT NULL,
                 cod_pessoa INTEGER NOT NULL,
-                des_razaosocial VARCHAR NOT NULL,
-                val_cnpj VARCHAR NOT NULL,
+                des_nome VARCHAR NOT NULL,
+                val_documento VARCHAR NOT NULL,
+                val_telefone VARCHAR NOT NULL,
                 fk_endereco INTEGER NOT NULL,
                 CONSTRAINT id_pessoa PRIMARY KEY (id_pessoa)
 );
@@ -59,6 +62,7 @@ CREATE TABLE public.classificacao (
 
 CREATE TABLE public.lancamento (
                 id_lancamento SERIAL NOT NULL,
+                cod_lancamento INTEGER NOT NULL,
                 val_numdocumento VARCHAR NOT NULL,
                 dat_lancamento DATE NOT NULL,
                 val_lancamento DOUBLE PRECISION NOT NULL,
@@ -96,7 +100,7 @@ CREATE TABLE public.baixa (
 );
 
 CREATE TABLE public.usuario (
-                id_usuario INTEGER NOT NULL,
+                id_usuario SERIAL NOT NULL,
                 cod_usuario INTEGER NOT NULL,
                 des_nome VARCHAR NOT NULL,
                 val_login VARCHAR NOT NULL,
@@ -112,60 +116,62 @@ FOREIGN KEY (fk_conta)
 REFERENCES public.conta (id_conta)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION
-NOT DEFERRABLE;
+DEFERRABLE INITIALLY DEFERRED;
 
 ALTER TABLE public.pessoa ADD CONSTRAINT endereco_pessoa_fk
 FOREIGN KEY (fk_endereco)
 REFERENCES public.endereco (id_endereco)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION
-NOT DEFERRABLE;
+DEFERRABLE INITIALLY DEFERRED;
 
 ALTER TABLE public.fornecedor ADD CONSTRAINT pessoa_fornecedor_fk
 FOREIGN KEY (fk_pessoa)
 REFERENCES public.pessoa (id_pessoa)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION
-NOT DEFERRABLE;
+DEFERRABLE INITIALLY DEFERRED;
 
 ALTER TABLE public.cliente ADD CONSTRAINT pessoa_cliente_fk
 FOREIGN KEY (fk_pessoa)
 REFERENCES public.pessoa (id_pessoa)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION
-NOT DEFERRABLE;
+DEFERRABLE INITIALLY DEFERRED;
 
 ALTER TABLE public.titulos ADD CONSTRAINT pessoa_titulos_fk
 FOREIGN KEY (fk_pessoa)
 REFERENCES public.pessoa (id_pessoa)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION
-NOT DEFERRABLE;
+DEFERRABLE INITIALLY DEFERRED;
 
 ALTER TABLE public.titulos ADD CONSTRAINT classificacao_titulospagar_fk
 FOREIGN KEY (fk_classificacao)
 REFERENCES public.classificacao (id_classificacao)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION
-NOT DEFERRABLE;
+DEFERRABLE INITIALLY DEFERRED;
 
 ALTER TABLE public.lancamento ADD CONSTRAINT classificacao_lancamento_fk
 FOREIGN KEY (fk_classificacao)
 REFERENCES public.classificacao (id_classificacao)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION
-NOT DEFERRABLE;
+DEFERRABLE INITIALLY DEFERRED;
 
 ALTER TABLE public.baixa ADD CONSTRAINT lancamento_baixa_fk
 FOREIGN KEY (fk_lancamento)
 REFERENCES public.lancamento (id_lancamento)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION
-NOT DEFERRABLE;
+DEFERRABLE INITIALLY DEFERRED;
 
 ALTER TABLE public.baixa ADD CONSTRAINT titulos_baixa_fk
 FOREIGN KEY (fk_titulos)
 REFERENCES public.titulos (id_titulos)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION
-NOT DEFERRABLE;
+DEFERRABLE INITIALLY DEFERRED;
+
+INSERT INTO usuario(id_usuario, cod_usuario, des_nome, val_login, val_senha, opt_tesoureiro, opt_desativado) VALUES (DEFAULT, 1, 'Teste', 'teste', md5('12345651Lv1*'), 'Nao', 'Sim');

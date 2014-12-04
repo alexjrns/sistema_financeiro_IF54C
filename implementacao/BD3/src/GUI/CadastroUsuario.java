@@ -8,6 +8,7 @@ package GUI;
 import DAO.UsuarioDAO;
 import Entidades.Usuario;
 import JDBC.ExecutaBanco;
+import java.awt.Toolkit;
 import javax.swing.JOptionPane;
 
 /**
@@ -15,6 +16,7 @@ import javax.swing.JOptionPane;
  * @author JoãoRicardo
  */
 public class CadastroUsuario extends javax.swing.JFrame {
+    private Usuario usu;    
     private ExecutaBanco exe;        
     private UsuarioDAO usuDAO;
     /**
@@ -22,6 +24,7 @@ public class CadastroUsuario extends javax.swing.JFrame {
      */
     public CadastroUsuario() {
         initComponents();
+        setIcon();
         exe = new ExecutaBanco();
         usuDAO = new UsuarioDAO();
 
@@ -52,8 +55,10 @@ public class CadastroUsuario extends javax.swing.JFrame {
         btnCancelar = new javax.swing.JButton();
         btnPesquisar = new javax.swing.JButton();
         btnRemover = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblDados = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cadastro de usuários");
         setResizable(false);
 
@@ -129,12 +134,56 @@ public class CadastroUsuario extends javax.swing.JFrame {
             }
         });
 
+        tblDados.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        tblDados.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblDadosMouseClicked(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                tblDadosMousePressed(evt);
+            }
+        });
+        tblDados.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tblDadosKeyPressed(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblDados);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnNovo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnAlterar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnSalvar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnCancelar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnRemover)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnPesquisar)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(89, 89, 89)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblLogin)
                     .addComponent(lblCodigo)
@@ -147,23 +196,9 @@ public class CadastroUsuario extends javax.swing.JFrame {
                         .addComponent(txtLogin)
                         .addComponent(txtNome)
                         .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txtSenha, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE))
+                        .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(ckbDesativado))
-                .addGap(95, 95, 95))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnNovo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnAlterar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnSalvar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnCancelar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnRemover)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnPesquisar)
-                .addContainerGap())
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -188,7 +223,9 @@ public class CadastroUsuario extends javax.swing.JFrame {
                 .addComponent(ckbTesoureiro)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(ckbDesativado)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSalvar)
                     .addComponent(btnNovo)
@@ -196,12 +233,20 @@ public class CadastroUsuario extends javax.swing.JFrame {
                     .addComponent(btnCancelar)
                     .addComponent(btnPesquisar)
                     .addComponent(btnRemover))
-                .addContainerGap())
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    public Usuario getUsuarioLogado(){
+        return this.usu;
+    }
+
+    public void setUsuarioLogado(Usuario usuario){
+        this.usu = usuario;
+    }    
 
     private Usuario setUsuario(){
         int codUsuario = Integer.parseInt(txtCodigo.getText());
@@ -215,7 +260,7 @@ public class CadastroUsuario extends javax.swing.JFrame {
     }
     
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        if(usuDAO.cadastrar(this.setUsuario())){            
+        if(usuDAO.salvar(this.setUsuario())){            
             txtNome.setEditable(false);
             txtLogin.setEditable(false);
             txtSenha.setEditable(false);
@@ -227,7 +272,8 @@ public class CadastroUsuario extends javax.swing.JFrame {
             btnAlterar.setEnabled(true);
             btnSalvar.setEnabled(false);
             btnCancelar.setEnabled(false);
-            btnRemover.setEnabled(false);            
+            btnRemover.setEnabled(false); 
+            tblDados.setModel(usuDAO.consultarTodosTable());            
         }
     }//GEN-LAST:event_btnSalvarActionPerformed
 
@@ -249,24 +295,12 @@ public class CadastroUsuario extends javax.swing.JFrame {
         btnAlterar.setEnabled(false);
         btnSalvar.setEnabled(false);
         btnCancelar.setEnabled(false);
-        btnRemover.setEnabled(false);        
+        btnRemover.setEnabled(false);
+        tblDados.setModel(usuDAO.consultarTodosTable());        
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
-        if(usuDAO.alterar(this.setUsuario())){
-            txtNome.setEditable(true);
-            txtLogin.setEditable(true);
-            txtSenha.setEditable(true);
-            ckbTesoureiro.setEnabled(true);
-            ckbDesativado.setEnabled(true);
-
-            btnNovo.setEnabled(false);
-            btnPesquisar.setEnabled(false);
-            btnAlterar.setEnabled(false);
-            btnSalvar.setEnabled(true);
-            btnCancelar.setEnabled(true);
-            btnRemover.setEnabled(false);            
-        }
+        modoEdicao();
     }//GEN-LAST:event_btnAlterarActionPerformed
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
@@ -289,6 +323,7 @@ public class CadastroUsuario extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void btnPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPesquisarActionPerformed
+        tblDados.setModel(usuDAO.consultarTodosTable());
         txtCodigo.setText("");
         txtNome.setText("");
         txtNome.setEditable(false);
@@ -309,6 +344,21 @@ public class CadastroUsuario extends javax.swing.JFrame {
         btnRemover.setEnabled(false);
     }//GEN-LAST:event_btnPesquisarActionPerformed
 
+    private void modoEdicao(){
+        txtNome.setEditable(true);
+        txtLogin.setEditable(true);
+        txtSenha.setEditable(true);
+        ckbTesoureiro.setEnabled(true);
+        ckbDesativado.setEnabled(true);
+
+        btnNovo.setEnabled(false);
+        btnPesquisar.setEnabled(false);
+        btnAlterar.setEnabled(false);
+        btnSalvar.setEnabled(true);
+        btnCancelar.setEnabled(true);
+        btnRemover.setEnabled(false);        
+    }
+    
     private void btnRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverActionPerformed
         int result = (JOptionPane.showConfirmDialog(null, "Tem certeza que deseja excluir esse registro?", "Confirmção", JOptionPane.YES_NO_OPTION));            
         if(result == JOptionPane.YES_NO_OPTION){
@@ -331,9 +381,42 @@ public class CadastroUsuario extends javax.swing.JFrame {
                 btnSalvar.setEnabled(false);
                 btnCancelar.setEnabled(false);
                 btnRemover.setEnabled(false);
+
+                tblDados.setModel(usuDAO.consultarTodosTable());                
             }            
         }
     }//GEN-LAST:event_btnRemoverActionPerformed
+
+    private void tblDadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDadosMouseClicked
+        int row = tblDados.getSelectedRow();
+        txtCodigo.setText(tblDados.getValueAt(row, 0).toString());
+        txtNome.setText(tblDados.getValueAt(row , 1).toString());
+        txtLogin.setText(tblDados.getValueAt(row, 2).toString());
+        txtSenha.setText("");
+        if(tblDados.getValueAt(row, 3).toString().equals("Sim"))
+            ckbTesoureiro.setSelected(true);
+        else
+            ckbTesoureiro.setSelected(false);
+
+        if(tblDados.getValueAt(row, 4).toString().equals("Sim"))
+            ckbDesativado.setSelected(true);
+        else
+            ckbDesativado.setSelected(false);
+
+        btnAlterar.setEnabled(true);
+        if (usu.isTesoureiro())
+            btnRemover.setEnabled(true);
+        else
+            btnRemover.setEnabled(false);
+    }//GEN-LAST:event_tblDadosMouseClicked
+
+    private void tblDadosMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDadosMousePressed
+
+    }//GEN-LAST:event_tblDadosMousePressed
+
+    private void tblDadosKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblDadosKeyPressed
+
+    }//GEN-LAST:event_tblDadosKeyPressed
 
     /**
      * @param args the command line arguments
@@ -370,6 +453,10 @@ public class CadastroUsuario extends javax.swing.JFrame {
         });
     }
 
+    private void setIcon() {
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("imagens/sisfi_icone.png")));
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAlterar;
     private javax.swing.JButton btnCancelar;
@@ -379,10 +466,12 @@ public class CadastroUsuario extends javax.swing.JFrame {
     private javax.swing.JButton btnSalvar;
     private javax.swing.JCheckBox ckbDesativado;
     private javax.swing.JCheckBox ckbTesoureiro;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblCodigo;
     private javax.swing.JLabel lblLogin;
     private javax.swing.JLabel lblNome;
     private javax.swing.JLabel lblSenha;
+    private javax.swing.JTable tblDados;
     private javax.swing.JTextField txtCodigo;
     private javax.swing.JTextField txtLogin;
     private javax.swing.JTextField txtNome;
